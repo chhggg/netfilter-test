@@ -5,6 +5,7 @@
 #include <linux/types.h>
 #include <linux/netfilter.h>		/* for NF_ACCEPT */
 #include <errno.h>
+#include <string.h>
 
 #include <libnetfilter_queue/libnetfilter_queue.h>
 
@@ -66,7 +67,7 @@ static u_int32_t print_pkt (struct nfq_data *tb)
 
 	if (ret >= 0){
         u_int32_t iphdr_len = (data[0] & 0xf) * 4;
-        u_int32_t tcphdr_len = (data[iphdr_len + 12] & 0xf0) * 4;
+        u_int32_t tcphdr_len = ((data[iphdr_len + 12] & 0xf0)>>4) * 4;
         u_int32_t http_len = ret - iphdr_len - tcphdr_len;
 
         unsigned char *http_data = data + iphdr_len + tcphdr_len;
